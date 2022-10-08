@@ -1,6 +1,5 @@
 #include <reg52.h>
 #include "../MyHeadFile/Button.h"
-#define SMG_A_DP_PORT P0
 void main()
 {	
 	u8 key=0;
