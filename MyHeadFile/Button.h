@@ -61,7 +61,11 @@ u8 key_matrix_ranks_scan(void)//行列扫描
 			case 0xee: key_value=16;break;
 		}
 	}
-	while(KEY_MATRIX_PORT!=0xfe);//等待按键松开
+	while(KEY_MATRIX_PORT!=0xfe);
 	return key_value;		
+}
+u8 key_rollback_scan(void)
+{
+	
 }
 #endif

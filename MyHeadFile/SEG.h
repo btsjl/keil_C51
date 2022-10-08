@@ -41,10 +41,12 @@ void display(u8 num[],u8 n)//显示num数组里的编码，n为编码长度，n<
             case 3: LSC=1;LSB=0;LSA=0;break;
             case 4: LSC=0;LSB=1;LSA=1;break;
             case 5: LSC=0;LSB=1;LSA=0;break;
+            case 6: LSC=0;LSB=0;LSA=1;break;
+            case 7: LSC=0;LSB=0;LSA=0;break;
         }
         LCD=num[i];
         delay_10us(100);
         LCD=0;
-    }
+        }
 }
 #endif
