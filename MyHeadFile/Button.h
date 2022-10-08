@@ -1,7 +1,13 @@
-#ifdef __Button_H_
-#define __Button_H_
 typedef unsigned int u16;	//对系统默认数据类型进行重定义
 typedef unsigned char u8;
+u8 gsmg_code[17]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71};
+#ifdef __Button_H_
+#define __Button_H_
+#define KEY_MATRIX_PORT	P1	//使用宏定义矩阵按键控制口		
+void delay_10us(u16 ten_us)
+{
+	while(ten_us--);	
+}
 u8 key_matrix_ranks_scan(void)
 {
 	u8 key_value=0;
@@ -61,7 +67,6 @@ u8 key_matrix_ranks_scan(void)
 		}
 	}
 	while(KEY_MATRIX_PORT!=0xfe);//等待按键松开
-	
 	return key_value;		
 }
 #endif
