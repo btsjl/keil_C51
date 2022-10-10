@@ -9,7 +9,7 @@ int time=50000;
 u8 i;
 u8 press = 0;//判断开关是否按下的参数
 u16 c=0;//利用c值在0或1变化 来中断或开启流水灯
-u16 d=0;
+u16 d=0;//df
 void delay(u16 i){
 while(i--);
 }
@@ -44,7 +44,7 @@ if(press==1) //判断按键按下
         {
         while(!c); 
         LED=~(0x01<<i);
-            while(time--)
+            while(time--)//在循环
             {
                 while(d)
                 {
