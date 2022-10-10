@@ -2,7 +2,7 @@
 #include"intrins.h"
 typedef unsigned char u8;
 typedef unsigned int u16;
-#define LED P0
+#define LED P2
 sbit k3=P3^2;
 sbit k4=P3^3;
 int time=50000;
