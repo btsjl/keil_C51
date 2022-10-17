@@ -69,28 +69,4 @@ u8 key_matrix_ranks_scan(void)//行列扫描
 	while(KEY_MATRIX_PORT!=0xfe);
 	return key_value;		
 }
-
-
-
-u8 keyscan(void){
-	int temp;
-	int i;
-	P1=0xf0;
-	if((P1&0xf0)!=0xf0){
-		delay_10us(100);
-		if((P1&0xf0)!=0xf0)
-		{
-			temp=P1&0xf0;
-			P1=0x0f;
-			temp |= (P1&0x0f);
-			delay_10us(100);
-		}
-		for(i=0;i<16;i++)
-		{
-			if(temp==key_n[i])
-			return i;
-		}
-	}
-	else return 16;
-}
 #endif
