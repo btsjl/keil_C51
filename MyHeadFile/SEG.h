@@ -5,6 +5,15 @@
 sbit LSA=P2^2;
 sbit LSB=P2^3;
 sbit LSC=P2^4;
+void getnum(u8 *num,u16 basenum)//把basenum的每一位存到数组里
+{
+    u8 i=0;
+    for(i=0;i<8;i++)
+    {
+        num[7-i]=basenum%10;
+        basenum/=10;
+    }
+}
 u8 changenum(u8 num)//把数字转换成对应的共阳极数码管的编码
 {
     //0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71

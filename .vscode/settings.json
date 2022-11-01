@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "button.h": "c",
-        "REG52.H": "cpp"
+        "REG52.H": "cpp",
+        "seg.h": "c"
     }
 }
