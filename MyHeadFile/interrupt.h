@@ -34,4 +34,14 @@ void Timer_Interrupt_1()
     EA=1;
     TR1=1;    
 }
+
+void Counter()
+{
+    TMOD|=0x50;
+    TH0=0xfc;
+    TL0=0x18;
+    ET0=1;
+    EA=1;
+    TR0=1;
+}
 #endif
