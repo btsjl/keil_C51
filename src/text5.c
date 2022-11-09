@@ -5,7 +5,7 @@ u8 n;
 u8 num[8]={0,0,0,0,0,0,0,0};//用0填充num
 void main()
 {
-    Counter();
+    Counter(); 
     while(1)
     {
         getnum(num,i);//把i的值储存数组
