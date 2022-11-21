@@ -3,6 +3,8 @@
     "files.associations": {
         "button.h": "c",
         "REG52.H": "cpp",
-        "seg.h": "c"
+        "seg.h": "c",
+        "total.h": "c",
+        "REG51.H": "cpp"
     }
 }

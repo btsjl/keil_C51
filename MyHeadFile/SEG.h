@@ -37,6 +37,22 @@ u8 changenum(u8 num)//把数字转换成对应的共阳极数码管的编码
     case 15:return 0x71;
     }
 }
+u8 changechartonum(u8 num)
+{
+    switch (num)
+    {
+    case 0x30:return 0x3f;
+    case 0x31:return 0x06;
+    case 0x32:return 0x5b;
+    case 0x33:return 0x4f;
+    case 0x34:return 0x66;
+    case 0x35:return 0x6d;
+    case 0x36:return 0x7d;
+    case 0x37:return 0x07;
+    case 0x38:return 0x7f;
+    case 0x39:return 0x6f;
+    }
+}
 void display(u8 num[],u8 n)//显示num数组里的编码，n为编码长度，n<8
 {
     u8 i;
