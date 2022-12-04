@@ -5,6 +5,7 @@
         "REG52.H": "cpp",
         "seg.h": "c",
         "total.h": "c",
-        "REG51.H": "cpp"
+        "REG51.H": "cpp",
+        "interrupt.h": "c"
     }
 }

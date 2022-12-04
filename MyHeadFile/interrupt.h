@@ -17,7 +17,7 @@ void External_Interrupt_1()//外部中断1
 
 void Timer_Interrupt_0()//T0的16位计时器模式
 {
-    TMOD=0x01;
+    TMOD|=0x01;
     TH0=0xFC;
     TL0=0x18;
     ET0=1;
@@ -35,7 +35,7 @@ void Timer_Interrupt_1()//T1的16位计时器模式
     TR1=1;    
 }
 
-void Counter()//T0的16位计数器模式
+void Counter0()//T0的16位计数器模式
 {
     TMOD|=0x05;
     TH0=0xFF;
@@ -43,5 +43,14 @@ void Counter()//T0的16位计数器模式
     ET0=1;
     EA=1;
     TR0=1;
+}
+void Counter1()//T1的16位计数器模式
+{
+    TMOD|=0x50;
+    TH1=0xFF;
+    TL1=0xFF;
+    ET1=1;
+    EA=1;
+    TR1=1;
 }
 #endif
