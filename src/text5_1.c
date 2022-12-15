@@ -41,19 +41,11 @@ void main()
         for(n=0;n<8;n++)
             num1[n]=changenum(num[n]);
             display(num1,8);
-            Timer_Interrupt_0();
+            External_Interrupt_0();
             
     }
 }
-void Timer() interrupt 1
+void Timer() interrupt 0
 {
-    static int time_1=0;
-    while(time_1==100)
-    {
-        sum++;
-        time_1=0;
-    }
-    time_1++;
-    TH0=0xFC;
-    TL0=0x18;
+    sum++;
 }

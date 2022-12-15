@@ -6,6 +6,8 @@
         "seg.h": "c",
         "total.h": "c",
         "REG51.H": "cpp",
-        "interrupt.h": "c"
+        "interrupt.h": "c",
+        "esp8266.h": "c",
+        "INTRINS.H": "cpp"
     }
 }

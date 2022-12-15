@@ -35,6 +35,7 @@ u8 changenum(u8 num)//把数字转换成对应的共阳极数码管的编码
     case 13:return 0x5e;
     case 14:return 0x79;
     case 15:return 0x71;
+    case 16:return 0x40;
     }
 }
 u8 changechartonum(u8 num)
@@ -51,6 +52,7 @@ u8 changechartonum(u8 num)
     case 0x37:return 0x07;
     case 0x38:return 0x7f;
     case 0x39:return 0x6f;
+
     }
 }
 void display(u8 num[],u8 n)//显示num数组里的编码，n为编码长度，n<8
