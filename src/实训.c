@@ -26,6 +26,7 @@ void main()
             {
                 while(flag_2)
                 {
+                    LED=0;
                     PassOrLock[0]=0x73;
                     display(PassOrLock,2);
                 }
@@ -60,6 +61,7 @@ void extend_0() interrupt 0
 {
     u8 z=0;
     flag_2=0;
+    LED=1;
     for(z=0;z<8;z++)
     {
         scanpasswd[z]=16;

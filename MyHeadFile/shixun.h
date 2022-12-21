@@ -13,6 +13,7 @@ u8 PassOrLock[2]={0x73,0};
 u8 passwd[8]={1,2,3,4,5,6,7,8};
 u8 scanpasswd[8]={16,16,16,16,16,16,16,16};
 u8 scanpasswdcode[8];
+sbit LED=P2^7;
 void Timer_Interrupt_0_1()//T0的16位计时器模式
 {
     TMOD|=0x01;
