@@ -6,7 +6,7 @@ void at24c02_write_one_byte(u8 addr,u8 dat);//AT24C02指定地址写数据
 u8 at24c02_read_one_byte(u8 addr);//AT24C02指定地址读数据
 void at24c02_write_one_byte(u8 addr,u8 dat)
 {				   	  	    																 
-    iic_start();  
+    iic_start(); 
 	iic_write_byte(0XA0);	//发送写命令	    	  
 	iic_wait_ack();	   
     iic_write_byte(addr);	//发送写地址   
