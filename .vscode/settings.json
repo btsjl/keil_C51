@@ -8,6 +8,8 @@
         "REG51.H": "cpp",
         "interrupt.h": "c",
         "esp8266.h": "c",
-        "INTRINS.H": "cpp"
+        "INTRINS.H": "cpp",
+        "24c02.h": "c",
+        "iic.h": "c"
     }
 }

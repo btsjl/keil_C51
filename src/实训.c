@@ -2,12 +2,22 @@
 void main()
 {
     u8 key;
+    u8 i=0;
     External_Interrupt_0();
     External_Interrupt_1();
     Timer_Interrupt_0_1();
+    UART_Init(byt);
+	delay_ms(1000);
+	ESP8266_SendCmd("AT+CIPMUX=1");
+	ESP8266_SendCmd("AT+CIPSERVER=1,8080");
+    ES=1;
+    for(i=0;i<8;i++)
+    {
+        passwd[i]=at24c02_read_one_byte(ADDREES+i);
+    }
     while(1)
     {
-        u8 i=0;
+       
         for(i=0;i<8;i++)
         {
             scanpasswdcode[i]=changenum(scanpasswd[i]);
@@ -97,4 +107,54 @@ void Timer() interrupt 1
         ET0=0;
     }
     
+}
+void uart() interrupt 4 //串口通信中断函数
+{
+	if(RI)
+	{
+		RI=0;
+		UserScan[n_0]=SBUF;//读取接收到的数据
+		if(UserScan[0]=='+')
+        {
+            n_0++;
+            if(UserScan[n_0-2]=='#'&&UserScan[n_0-1]=='r'&&(EX0==1)&&(EX1==1))
+            {
+                u8 i=0;
+                flag_2=0;
+                n=-1;
+                n_0=0;
+                for(i=0;i<8;i++)
+                {
+                    scanpasswd[i]=16;
+                }
+            }
+        }
+		else 
+        n_0=0;
+		if(n_0==20)
+		{
+            if(UserScan[1]=='I'&&UserScan[7]=='1'&&UserScan[8]=='0')
+            {
+                if(UserScan[10]=='#'&&UserScan[11]=='s')
+                {
+					u8 c=0;
+                    for(c=0;c<8;c++)
+                    {
+                        scanpasswd[c]=changechartonum(UserScan[12+c]);
+						n=7;
+                    }
+                }
+                if(UserScan[10]=='#'&&UserScan[11]=='c')
+                {
+					u8 i=0;
+                    for(i=0;i<8;i++)
+                    {
+                        at24c02_write_one_byte(ADDREES+i,changechartonum(UserScan[12+i]));
+                        passwd[i]=changechartonum(UserScan[12+i]);
+                    }
+                }
+            }
+            n_0=0;
+		}			
+	}	
 }

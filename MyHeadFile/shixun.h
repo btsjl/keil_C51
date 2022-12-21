@@ -4,7 +4,11 @@
 #include "./interrupt.h"
 #include "./SEG.h"
 #include "./esp8266.h"
+#include "./24c02.h"
+#define ADDREES 0
+u8 byt=0xfA;
 u8 n=-1;
+u8 n_0=0;
 u8 flag=0;
 u8 flag_1=0;
 u8 flag_2=1;
@@ -12,6 +16,9 @@ u8 flag_3=0;
 u8 PassOrLock[2]={0x73,0};
 u8 passwd[8]={1,2,3,4,5,6,7,8};
 u8 scanpasswd[8]={16,16,16,16,16,16,16,16};
+u8 *a="error!";
+u8 *b="right!";
+u8 UserScan[20];
 u8 scanpasswdcode[8];
 sbit LED=P2^7;
 void Timer_Interrupt_0_1()//T0的16位计时器模式
@@ -35,6 +42,7 @@ u8 check()
     }
     if(s)
     {
+		ESP8266_SendData(a);
         flag_1++;
         Buzzer(100);
         if(flag_1>=3)
@@ -45,6 +53,7 @@ u8 check()
     {
         flag_1=0;
         return 1;
+		ESP8266_SendData(b);
     }
 }
 void delay_10us_2(u16 ten_us)
@@ -128,4 +137,5 @@ u8 key_matrix_ranks_scan_2(void)
 	
 	return key_value;		
 }
+
 #endif

@@ -53,6 +53,7 @@ u8 changechartocode(u8 num)
     case 0x37:return 0x07;
     case 0x38:return 0x7f;
     case 0x39:return 0x6f;
+    case 0x10:return 0x40;
     default:return num;
     }
 }
