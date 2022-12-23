@@ -1,23 +1,54 @@
-#include "./yushichecng.h"
+#include "./yushicheng.h"
 void main()
 {
+    u8 i=0;
     u8 key;//用以接收按键输入的值
     External_Interrupt_0();//外部中断0初始化
     External_Interrupt_1();//外部中断1初始化
     Timer_Interrupt_0_1();//计时器中断0初始化
+    for(i=0;i<8;i++)
+    {
+        passwd[i]=at24c02_read_one_byte(ADDREES+i);
+    }
     while(1)
     {
-        u8 i=0;
         for(i=0;i<8;i++)
         {
             scanpasswdcode[i]=changenum(scanpasswd[i]);//将用户输入化为对应的数码管编码初始为“--------”
         }
         display(scanpasswdcode,8);//将输入的密码显示
         key=key_matrix_ranks_scan_2();//获取按键输入的值
-        if(key<10&&n!=7)//输入值小于10并且还未输入满八位时才允许输入
+        if(key==11)
+        {
+            flag_4=1;
+            for(i=0;i<8;i++)//将用户输入的密码清空，并使数码管恢复初始状态
+            {
+                scanpasswd[i]=16;
+            }
+            n=-1;
+        }
+        if(key<10&&n!=7&&flag_4==0)//输入值小于10并且还未输入满八位时才允许输入
         {
             n++;//到scanpasswd[]的下一位
             scanpasswd[n]=key;//将获取的按键输入存到用户密码存储的数组里
+        }
+        if(key<10&&n_0!=7&&flag_4)//输入值小于10并且还未输入满八位时才允许输入
+        {
+            n_0++;//到scanpasswd[]的下一位
+            scanpasswd[n_0]=key;//将获取的按键输入存到用户密码存储的数组里
+        }
+        if(n_0==7)
+        {
+            for(i=0;i<8;i++)
+            {
+                at24c02_write_one_byte(ADDREES+i,scanpasswd[i]);
+            }
+            for(i=0;i<8;i++)//将用户输入的密码清空，并使数码管恢复初始状态
+            {
+                scanpasswd[i]=16;
+            }
+            flag_4=0;
+            n_0=-1;
         }
         if(n==7)//输入满八位
         {

@@ -3,9 +3,14 @@
 #include <reg52.h>
 #define LCD P0//数码管
 #define KEY_MATRIX_PORT	P1   //矩阵按键
+#define ADDREES 0
+sbit IIC_SCL=P2^1;//SCL时钟线
+sbit IIC_SDA=P2^0;//SDA数据线
 typedef unsigned int u16;	//对系统默认数据类型进行重定义
 typedef unsigned char u8;
 //全局变量
+u8 n_0=-1;
+u8 flag_4=0;
 u8 n=-1;//密码输入到几位，n=0时为输入了一位，n=1时为输入了两位
 u8 flag=0;//用来接收check函数的返回值，返回值为0则密码错误，返回值为1则密码正确
 u8 flag_1=0;//密码输入错误的次数，默认0，错一次+1，对一次变为0
@@ -13,6 +18,7 @@ u8 flag_2=1;//检测密码是否输入完全即输入8位，输入完就为1，�
 u8 flag_3=0;//flag_3=flag_1,它们作用不同，flag_3用来计算处罚时间时间为4*flag_3秒
 u8 PassOrLock[2]={0x73,0};//输入正确或错误时数码管显示，正确为0x73(‘P’),错误为0x38('L')
 u8 passwd[8]={1,2,3,4,5,6,7,8};//正确的密码
+u8 scanchangepasswd[8];
 u8 scanpasswd[8]={16,16,16,16,16,16,16,16};//用户输入的密码存储到这里
 u8 scanpasswdcode[8];//用户输入对应的数码管显示的编码存储到这里
 sbit LSA=P2^2;//数码管的位显示选择
@@ -212,5 +218,139 @@ u8 key_matrix_ranks_scan_2(void)//按键扫描函数
     }//等待按键松开	
 	
 	return key_value;		
+}
+void iic_start(void)
+{
+	IIC_SDA=1;//如果把该条语句放在SCL后面，第二次读写会出现问题
+	delay_10us(1);
+	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SDA=0;	//当SCL为高电平时，SDA由高变为低
+	delay_10us(1);
+	IIC_SCL=0;//钳住I2C总线，准备发送或接收数据
+	delay_10us(1);
+}
+
+void iic_stop(void)
+{	
+	IIC_SDA=0;//如果把该条语句放在SCL后面，第二次读写会出现问题
+	delay_10us(1);
+	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SDA=1;	//当SCL为高电平时，SDA由低变为高
+	delay_10us(1);			
+}
+
+
+void iic_ack(void)
+{
+	IIC_SCL=0;
+	IIC_SDA=0;	//SDA为低电平
+	delay_10us(1);
+   	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SCL=0;
+}
+
+
+void iic_nack(void)
+{
+	IIC_SCL=0;
+	IIC_SDA=1;	//SDA为高电平
+	delay_10us(1);
+   	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SCL=0;	
+}
+
+
+u8 iic_wait_ack(void)
+{
+	u8 time_temp=0;
+	
+	IIC_SCL=1;
+	delay_10us(1);
+	while(IIC_SDA)	//等待SDA为低电平
+	{
+		time_temp++;
+		if(time_temp>100)//超时则强制结束IIC通信
+		{	
+			iic_stop();
+			return 1;	
+		}			
+	}
+	IIC_SCL=0;
+	return 0;	
+}
+
+
+void iic_write_byte(u8 dat)
+{                        
+    u8 i=0; 
+	   	    
+    IIC_SCL=0;
+    for(i=0;i<8;i++)	//循环8次将一个字节传出，先传高再传低位
+    {              
+        if((dat&0x80)>0) 
+			IIC_SDA=1;
+		else
+			IIC_SDA=0;
+        dat<<=1; 	  
+		delay_10us(1);  
+		IIC_SCL=1;
+		delay_10us(1); 
+		IIC_SCL=0;	
+		delay_10us(1);
+    }	 
+}
+
+
+u8 iic_read_byte(u8 ack)
+{
+	u8 i=0,receive=0;
+   	
+    for(i=0;i<8;i++ )	//循环8次将一个字节读出，先读高再传低位
+	{
+        IIC_SCL=0; 
+        delay_10us(1);
+		IIC_SCL=1;
+        receive<<=1;
+        if(IIC_SDA)receive++;   
+		delay_10us(1); 
+    }					 
+    if (!ack)
+        iic_nack();
+    else
+        iic_ack();  
+		  
+    return receive;
+}
+void at24c02_write_one_byte(u8 addr,u8 dat)
+{				   	  	    																 
+    iic_start(); 
+	iic_write_byte(0XA0);	//发送写命令	    	  
+	iic_wait_ack();	   
+    iic_write_byte(addr);	//发送写地址   
+	iic_wait_ack(); 	 										  		   
+	iic_write_byte(dat);	//发送字节    							   
+	iic_wait_ack();  		    	   
+    iic_stop();				//产生一个停止条件
+	delay_ms(10);	 
+}
+
+u8 at24c02_read_one_byte(u8 addr)
+{				  
+	u8 temp=0;		  	    																 
+    iic_start();  
+	iic_write_byte(0XA0);	//发送写命令	   
+	iic_wait_ack(); 
+    iic_write_byte(addr); 	//发送写地址  
+	iic_wait_ack();	    
+	iic_start();  	 	   
+	iic_write_byte(0XA1); 	//进入接收模式         			   
+	iic_wait_ack();	 
+    temp=iic_read_byte(0);	//读取字节		   
+    iic_stop();				//产生一个停止条件    
+	return temp;			//返回读取的数据
 }
 #endif
